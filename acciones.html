@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Acciones Seguras - Bolsa IA</title>
+  <title>Acciones en Tiempo Real - Bolsa IA</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,7 +32,7 @@
   <h1>📈 Acciones en Tiempo Real</h1>
   <p>Datos obtenidos desde Alpha Vantage API.</p>
 
-  <table id="tabla-acciones">
+  <table>
     <thead>
       <tr>
         <th>Empresa</th>
@@ -41,12 +41,24 @@
         <th>Recomendación</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tabla-acciones">
       <tr>
         <td>Apple (AAPL)</td>
-        <td id="precio">Cargando...</td>
-        <td id="cambio">Cargando...</td>
-        <td id="reco">Analizando...</td>
+        <td id="precio-aapl">Cargando...</td>
+        <td id="cambio-aapl">Cargando...</td>
+        <td id="reco-aapl">Analizando...</td>
+      </tr>
+      <tr>
+        <td>Tesla (TSLA)</td>
+        <td id="precio-tsla">Cargando...</td>
+        <td id="cambio-tsla">Cargando...</td>
+        <td id="reco-tsla">Analizando...</td>
+      </tr>
+      <tr>
+        <td>Microsoft (MSFT)</td>
+        <td id="precio-msft">Cargando...</td>
+        <td id="cambio-msft">Cargando...</td>
+        <td id="reco-msft">Analizando...</td>
       </tr>
     </tbody>
   </table>
@@ -54,39 +66,48 @@
   <p><a href="index.html">← Volver al inicio</a></p>
 
   <script>
-    const API_KEY = "IFWL20X5O2E59914"; // ← Pega aquí tu API key rea
+    const API_KEY = "IFWL20X5O2E59914"; // ← Reemplaza con tu clave real
 
-    fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=${API_KEY}`)
-      .then(res => res.json())
-      .then(data => {
-       const quote = data["Global Quote"] || data["cita global"] || {};
+    const acciones = [
+      { nombre: "AAPL", id: "aapl" },
+      { nombre: "TSLA", id: "tsla" },
+      { nombre: "MSFT", id: "msft" }
+    ];
 
-const precio = parseFloat(quote["05. price"] || 0);
-const cambio = parseFloat(
-  (quote["10. change percent"] || quote["10. Porcentaje de cambio"] || "0")
-    .replace('%', '')
-    .replace(',', '.')
-);
-        document.getElementById("precio").textContent = `$${precio.toFixed(2)}`;
-        document.getElementById("cambio").textContent = `${cambio.toFixed(2)}%`;
+    acciones.forEach(({ nombre, id }) => {
+      fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${nombre}&apikey=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          const quote = data["Global Quote"] || data["cita global"] || {};
 
-        const reco = document.getElementById("reco");
-        if (cambio > 0) {
-          reco.textContent = "Comprar";
-          reco.style.color = "green";
-        } else if (cambio < -2) {
-          reco.textContent = "Vender";
-          reco.style.color = "red";
-        } else {
-          reco.textContent = "Esperar";
-          reco.style.color = "orange";
-        }
-      })
-      .catch(error => {
-        document.getElementById("precio").textContent = "Error";
-        document.getElementById("cambio").textContent = "Error";
-        document.getElementById("reco").textContent = "No disponible";
-      });
+          const precio = parseFloat(quote["05. price"] || 0);
+          const cambio = parseFloat(
+            (quote["10. change percent"] || quote["10. Porcentaje de cambio"] || "0")
+              .replace('%', '')
+              .replace(',', '.')
+          );
+
+          document.getElementById(`precio-${id}`).textContent = `$${precio.toFixed(2)}`;
+          document.getElementById(`cambio-${id}`).textContent = `${cambio.toFixed(2)}%`;
+
+          const reco = document.getElementById(`reco-${id}`);
+          if (cambio > 0) {
+            reco.textContent = "Comprar";
+            reco.style.color = "green";
+          } else if (cambio < -2) {
+            reco.textContent = "Vender";
+            reco.style.color = "red";
+          } else {
+            reco.textContent = "Esperar";
+            reco.style.color = "orange";
+          }
+        })
+        .catch(() => {
+          document.getElementById(`precio-${id}`).textContent = "Error";
+          document.getElementById(`cambio-${id}`).textContent = "Error";
+          document.getElementById(`reco-${id}`).textContent = "No disponible";
+        });
+    });
   </script>
 </body>
 </html>

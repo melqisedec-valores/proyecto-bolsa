@@ -59,10 +59,14 @@
     fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=${API_KEY}`)
       .then(res => res.json())
       .then(data => {
-        const quote = data["Global Quote"] || data["Cita global"];
-        const precio = parseFloat(quote["05. price"]);
-        const cambio = parseFloat(quote["10. Porcentaje de cambio"].replace('%', '').replace(',', '.'));
+       const quote = data["Global Quote"] || data["cita global"] || {};
 
+const precio = parseFloat(quote["05. price"] || 0);
+const cambio = parseFloat(
+  (quote["10. change percent"] || quote["10. Porcentaje de cambio"] || "0")
+    .replace('%', '')
+    .replace(',', '.')
+);
         document.getElementById("precio").textContent = `$${precio.toFixed(2)}`;
         document.getElementById("cambio").textContent = `${cambio.toFixed(2)}%`;
 

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Acciones Seguras del Día</title>
+  <title>Acciones Seguras - Bolsa IA</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,44 +29,60 @@
   </style>
 </head>
 <body>
-  <h1>📈 Acciones Seguras del Día</h1>
-  <p>Este es un ejemplo simulado de las recomendaciones de hoy según análisis con IA.</p>
+  <h1>📈 Acciones en Tiempo Real</h1>
+  <p>Datos obtenidos desde Alpha Vantage API.</p>
 
-  <table>
+  <table id="tabla-acciones">
     <thead>
       <tr>
         <th>Empresa</th>
-        <th>País</th>
-        <th>Precio Actual</th>
-        <th>Riesgo</th>
+        <th>Precio</th>
+        <th>Porcentaje Cambio</th>
         <th>Recomendación</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>Apple Inc.</td>
-        <td>EE.UU.</td>
-        <td>$175.40</td>
-        <td>Bajo</td>
-        <td>Comprar</td>
-      </tr>
-      <tr>
-        <td>Tesla</td>
-        <td>EE.UU.</td>
-        <td>$192.60</td>
-        <td>Medio</td>
-        <td>Esperar</td>
-      </tr>
-      <tr>
-        <td>Grupo Bimbo</td>
-        <td>México</td>
-        <td>$62.10</td>
-        <td>Bajo</td>
-        <td>Comprar</td>
+        <td>Apple (AAPL)</td>
+        <td id="precio">Cargando...</td>
+        <td id="cambio">Cargando...</td>
+        <td id="reco">Analizando...</td>
       </tr>
     </tbody>
   </table>
 
   <p><a href="index.html">← Volver al inicio</a></p>
+
+  <script>
+    const API_KEY = "FWL20X5O2E59914"; // ← Pega aquí tu API key real
+
+    fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=${API_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        const quote = data["Global Quote"] || data["Cita global"];
+        const precio = parseFloat(quote["05. price"]);
+        const cambio = parseFloat(quote["10. Porcentaje de cambio"].replace('%', '').replace(',', '.'));
+
+        document.getElementById("precio").textContent = `$${precio.toFixed(2)}`;
+        document.getElementById("cambio").textContent = `${cambio.toFixed(2)}%`;
+
+        const reco = document.getElementById("reco");
+        if (cambio > 0) {
+          reco.textContent = "Comprar";
+          reco.style.color = "green";
+        } else if (cambio < -2) {
+          reco.textContent = "Vender";
+          reco.style.color = "red";
+        } else {
+          reco.textContent = "Esperar";
+          reco.style.color = "orange";
+        }
+      })
+      .catch(error => {
+        document.getElementById("precio").textContent = "Error";
+        document.getElementById("cambio").textContent = "Error";
+        document.getElementById("reco").textContent = "No disponible";
+      });
+  </script>
 </body>
 </html>

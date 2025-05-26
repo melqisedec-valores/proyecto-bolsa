@@ -16,32 +16,51 @@
   </style>
 </head>
 <body>
-  <h1>📰 Noticias Financieras Analizadas con IA</h1>
-  <p>Aquí verás noticias recientes que afectan a tus inversiones, con análisis automático generado por inteligencia artificial.</p>
+  <h1>📰 Noticias Financieras Analizadas con IA Local</h1>
+  <p>Estas noticias se analizan automáticamente sin conexión a OpenAI.</p>
 
   <div id="contenedor"></div>
 
   <p><a href="index.html">← Volver al inicio</a></p>
 
   <script>
-    const API_KEY = "8be3c9b58cbc48b4bef066357d743946"; // ← Reemplaza con tu clave real
+    const API_KEY = "8be3c9b58cbc48b4bef066357d743946"; // Reemplaza esto por tu clave real
     const contenedor = document.getElementById("contenedor");
 
-    fetch(`https://newsapi.org/v2/everything?q=(Apple OR Tesla OR Microsoft)&language=es&sortBy=publishedAt&apiKey=${API_KEY}`)
+    function analizarNoticia(titulo) {
+      const texto = titulo.toLowerCase();
+      const clavesPositivas = ["invierte", "sube", "gana", "expande", "récord", "crece", "aumenta"];
+      const clavesNegativas = ["cae", "prohíben", "multan", "crisis", "demanda", "problema", "pierde", "reduce"];
+
+      for (const palabra of clavesNegativas) {
+        if (texto.includes(palabra)) return "🔴 NEGATIVO";
+      }
+      for (const palabra of clavesPositivas) {
+        if (texto.includes(palabra)) return "🟢 POSITIVO";
+      }
+      return "⚪ NEUTRO";
+    }
+
+    fetch(`https://newsapi.org/v2/everything?q=Apple OR Tesla OR Microsoft&language=es&sortBy=publishedAt&pageSize=5&apiKey=${API_KEY}`)
       .then(res => res.json())
       .then(data => {
-        const noticias = data.articles.slice(0, 5);
+        const noticias = data.articles;
         noticias.forEach(n => {
           const div = document.createElement("div");
+          const impacto = analizarNoticia(n.title);
+
           div.className = "noticia";
           div.innerHTML = `
             <h3>${n.title}</h3>
-            <p>${n.description || 'Sin descripción disponible.'}</p>
+            <p>${n.description || "Sin descripción disponible."}</p>
             <p><a href="${n.url}" target="_blank">Leer más</a></p>
-            <p class="impacto">🤖 Analizando impacto con IA...</p>
+            <p class="impacto">🧠 Impacto estimado: <strong>${impacto}</strong></p>
           `;
           contenedor.appendChild(div);
         });
+      })
+      .catch(() => {
+        contenedor.innerHTML = "<p>Error al cargar noticias.</p>";
       });
   </script>
 </body>

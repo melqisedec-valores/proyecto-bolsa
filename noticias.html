@@ -2,12 +2,47 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Noticias - Bolsa IA</title>
+  <title>Noticias y Análisis - Bolsa IA</title>
+  <style>
+    body { font-family: Arial; background: #f3f4f6; padding: 2rem; color: #111827; }
+    .noticia {
+      background: white; margin-bottom: 1.5rem; padding: 1rem;
+      border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .impacto {
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; background: #f3f4f6; padding: 2rem;">
-  <h1>Noticias Relevantes</h1>
-  <p>En esta sección se mostrarán noticias internacionales y su impacto en la bolsa.</p>
+<body>
+  <h1>📰 Noticias Financieras Analizadas con IA</h1>
+  <p>Aquí verás noticias recientes que afectan a tus inversiones, con análisis automático generado por inteligencia artificial.</p>
 
-  <a href="index.html">← Volver a inicio</a>
+  <div id="contenedor"></div>
+
+  <p><a href="index.html">← Volver al inicio</a></p>
+
+  <script>
+    const API_KEY = "8be3c9b58cbc48b4bef066357d743946"; // ← Reemplaza con tu clave real
+    const contenedor = document.getElementById("contenedor");
+
+    fetch(`https://newsapi.org/v2/everything?q=(Apple OR Tesla OR Microsoft)&language=es&sortBy=publishedAt&apiKey=${API_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        const noticias = data.articles.slice(0, 5);
+        noticias.forEach(n => {
+          const div = document.createElement("div");
+          div.className = "noticia";
+          div.innerHTML = `
+            <h3>${n.title}</h3>
+            <p>${n.description || 'Sin descripción disponible.'}</p>
+            <p><a href="${n.url}" target="_blank">Leer más</a></p>
+            <p class="impacto">🤖 Analizando impacto con IA...</p>
+          `;
+          contenedor.appendChild(div);
+        });
+      });
+  </script>
 </body>
 </html>

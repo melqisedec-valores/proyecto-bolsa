@@ -1,0 +1,29 @@
+{
+  "articles": [
+    {
+      "title": "Apple cae en ventas en Europa",
+      "description": "Las ventas de Apple disminuyen un 10% en el mercado europeo.",
+      "url": "https://ejemplo.com/apple-ventas-europa"
+    },
+    {
+      "title": "Tesla gana récord de producción este mes",
+      "description": "Tesla alcanza un nuevo récord en la producción de vehículos eléctricos.",
+      "url": "https://ejemplo.com/tesla-record-produccion"
+    },
+    {
+      "title": "Microsoft lanza nueva actualización",
+      "description": "Microsoft publica una actualización importante para su sistema operativo.",
+      "url": "https://ejemplo.com/microsoft-actualizacion"
+    },
+    {
+      "title": "El mercado financiero muestra signos de recuperación",
+      "description": "Los indicadores económicos apuntan a una recuperación del mercado financiero.",
+      "url": "https://ejemplo.com/mercado-recuperacion"
+    },
+    {
+      "title": "Samsung es demandada por uso de patentes",
+      "description": "Samsung enfrenta una demanda por presunta infracción de patentes.",
+      "url": "https://ejemplo.com/samsung-demanda-patentes"
+    }
+  ]
+}

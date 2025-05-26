@@ -41,7 +41,7 @@
       return "⚪ NEUTRO";
     }
 
-    fetch(`https://newsapi.org/v2/everything?q=Apple OR Tesla OR Microsoft&language=es&sortBy=publishedAt&pageSize=5&apiKey=${API_KEY}`)
+    fetch('noticias_falsas.json')
       .then(res => res.json())
       .then(data => {
         const noticias = data.articles;

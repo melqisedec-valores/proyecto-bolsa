@@ -2,77 +2,84 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA para Bolsa de Valores Global</title>
+  <title>Noticias en Tiempo Real</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
     }
-    header {
-      background-color: #111827;
-      color: white;
-      padding: 1rem 2rem;
+    h1 {
       text-align: center;
+      color: #333;
     }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      background-color: #1f2937;
-      padding: 0.5rem;
+    .contenedor {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem;
-    }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    .card {
-      background-color: white;
-      padding: 1.5rem;
+    .tarjeta {
+      background: white;
+      padding: 15px;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      margin: 2rem auto;
-      max-width: 600px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
     }
-    footer {
-      background-color: #111827;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
+    .tarjeta:hover {
+      transform: scale(1.03);
+    }
+    .tarjeta img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .tarjeta h3 {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    .tarjeta p {
+      font-size: 14px;
+      color: #555;
+    }
+    .tarjeta a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #007bff;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Bienvenidos a Bolsa IA Global</h1>
-    <p>Inversión Inteligente para Todos</p>
-  </header>
+  <h1>📰 Noticias del Día</h1>
+  <div class="contenedor" id="contenedorNoticias"></div>
 
-  <nav>
-  <a href="#">Inicio</a>
-  <a href="#">Acciones Seguras</a>
-  <a href="#">Noticias</a>
-  <a href="#">Contacto</a>
-</nav>
+  <script>
+    fetch('http://localhost:5000/noticias')
+      .then(response => response.json())
+      .then(data => {
+        const noticias = data.articles;
+        const contenedor = document.getElementById('contenedorNoticias');
 
-  <main>
-    <div class="card">
-      <h2>Plataforma Global de Inversiones</h2>
-      <p>Con IA que analiza en tiempo real las mejores acciones del día y te avisa cuándo vender.</p>
-      <p>Pronto podrás registrarte, recibir alertas y ver noticias relevantes.</p>
-    </div>
-  </main>
+        noticias.forEach(noticia => {
+          const tarjeta = document.createElement('div');
+          tarjeta.className = 'tarjeta';
 
-  <footer>
-    &copy; 2025 Bolsa IA Global. Todos los derechos reservados.
-  </footer>
+          tarjeta.innerHTML = `
+            <img src="${noticia.urlToImage || 'https://via.placeholder.com/300x180'}" alt="Imagen">
+            <h3>${noticia.title}</h3>
+            <p>${noticia.description || 'Sin descripción disponible.'}</p>
+            <a href="${noticia.url}" target="_blank">Leer más</a>
+          `;
+
+          contenedor.appendChild(tarjeta);
+        });
+      })
+      .catch(error => {
+        console.error('Error al obtener noticias:', error);
+      });
+  </script>
 </body>
 </html>

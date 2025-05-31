@@ -1,85 +1,111 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Noticias en Tiempo Real</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IA Humanoide Global</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
       margin: 0;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    h1 {
-      text-align: center;
-      color: #333;
+
+    header {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
     }
-    .contenedor {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      padding: 20px;
+
+    .flag {
+      width: 48px;
+      height: 32px;
+      cursor: pointer;
+      border: 2px solid transparent;
     }
-    .tarjeta {
-      background: white;
-      padding: 15px;
+
+    .flag.active {
+      border-color: gold;
+    }
+
+    .humanoid {
+      width: 300px;
+      height: auto;
+      margin: 2rem 0;
+      border-radius: 20px;
+      box-shadow: 0 0 40px gold;
+    }
+
+    .news-section {
+      max-width: 800px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
     }
-    .tarjeta:hover {
-      transform: scale(1.03);
-    }
-    .tarjeta img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
+
+    .news-card {
+      background: rgba(255, 255, 255, 0.1);
+      margin-bottom: 1rem;
+      padding: 1rem;
       border-radius: 8px;
-    }
-    .tarjeta h3 {
-      margin-top: 10px;
-      font-size: 18px;
-    }
-    .tarjeta p {
-      font-size: 14px;
-      color: #555;
-    }
-    .tarjeta a {
-      display: inline-block;
-      margin-top: 10px;
-      color: #007bff;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h1>📰 Noticias del Día</h1>
-  <div class="contenedor" id="contenedorNoticias"></div>
+  <header>
+    <img src="https://flagcdn.com/w40/mx.png" alt="México" class="flag active" onclick="setLanguage('es')" />
+    <img src="https://flagcdn.com/w40/ht.png" alt="Haití" class="flag" onclick="setLanguage('fr')" />
+  </header>
+
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Cosmic_AI_concept_art.jpg/640px-Cosmic_AI_concept_art.jpg" alt="Humanoide" class="humanoid" />
+
+  <section class="news-section">
+    <h2 id="title">Noticias del día</h2>
+    <div id="news-container"></div>
+  </section>
 
   <script>
-    fetch('https://TU-URL-RENDER.onrender.com/noticias')
-      .then(response => response.json())
-      .then(data => {
-        const noticias = data.articles;
-        const contenedor = document.getElementById('contenedorNoticias');
+    let currentLang = 'es';
 
-        noticias.forEach(noticia => {
-          const tarjeta = document.createElement('div');
-          tarjeta.className = 'tarjeta';
+    const translations = {
+      es: {
+        title: "Noticias del día",
+      },
+      fr: {
+        title: "Actualités du jour",
+      }
+    };
 
-          tarjeta.innerHTML = `
-            <img src="${noticia.urlToImage || 'https://via.placeholder.com/300x180'}" alt="Imagen">
-            <h3>${noticia.title}</h3>
-            <p>${noticia.description || 'Sin descripción disponible.'}</p>
-            <a href="${noticia.url}" target="_blank">Leer más</a>
-          `;
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById("title").textContent = translations[lang].title;
+      document.querySelectorAll('.flag').forEach(f => f.classList.remove('active'));
+      document.querySelector(`.flag[onclick*="${lang}"]`).classList.add('active');
+    }
 
-          contenedor.appendChild(tarjeta);
+    async function fetchNews() {
+      try {
+        const response = await fetch("http://localhost:5000/noticias");
+        const data = await response.json();
+        const container = document.getElementById("news-container");
+        container.innerHTML = "";
+        data.articles.slice(0, 5).forEach(article => {
+          const div = document.createElement("div");
+          div.className = "news-card";
+          div.innerHTML = `<strong>${article.title}</strong><p>${article.description || ''}</p>`;
+          container.appendChild(div);
         });
-      })
-      .catch(error => {
-        console.error('Error al obtener noticias:', error);
-      });
+      } catch (e) {
+        document.getElementById("news-container").innerHTML =
+          "<p>No se pudieron cargar las noticias. ¿Está activo el servidor?</p>";
+      }
+    }
+
+    fetchNews();
   </script>
 </body>
 </html>

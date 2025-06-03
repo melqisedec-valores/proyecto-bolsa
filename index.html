@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Geovan Artaban - IA Global</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    video {
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+      margin-top: 1rem;
+      box-shadow: 0 0 25px gold;
+    }
+
+    h1 {
+      margin-top: 1rem;
+      font-size: 2rem;
+      color: gold;
+    }
+
+    .buttons {
+      margin-top: 1rem;
+    }
+
+    .buttons button {
+      background-color: #1f2937;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .buttons button:hover {
+      background-color: gold;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="titulo">Bienvenido a la plataforma de Geovan Artaban</h1>
+
+  <div class="buttons">
+    <button onclick="cambiarIdioma('es')">🇲🇽 Español</button>
+    <button onclick="cambiarIdioma('ht')">🇭🇹 Kreyòl Ayisyen</button>
+  </div>
+
+  <video id="video" autoplay muted loop controls>
+    <source id="videoSource" src="geovan-artaban-es.webm" type="video/webm">
+    Tu navegador no soporta este video.
+  </video>
+
+  <script>
+    function cambiarIdioma(idioma) {
+      const titulo = document.getElementById('titulo');
+      const video = document.getElementById('video');
+      const source = document.getElementById('videoSource');
+
+      if (idioma === 'es') {
+        titulo.textContent = "Bienvenido a la plataforma de Geovan Artaban";
+        source.src = "geovan-artaban-es.webm";
+      } else if (idioma === 'ht') {
+        titulo.textContent = "Byenveni sou platfòm Geovan Artaban";
+        source.src = "geovan-artaban-ht.webm";
+      }
+
+      video.load();
+    }
+  </script>
+
+</body>
+</html>
